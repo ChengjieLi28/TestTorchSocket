@@ -1,0 +1,4 @@
+.clwb
+bazel*
+.idea
+cmake-*
