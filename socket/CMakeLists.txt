@@ -10,8 +10,6 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(../third_party/fmt/include)
 
 add_library(SocketLib
-        debug.h
-        debug.cpp
         error.h
         exception.h
         exception.cpp
