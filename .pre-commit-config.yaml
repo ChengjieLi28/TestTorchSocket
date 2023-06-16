@@ -4,3 +4,7 @@ repos:
     hooks:
       - id: clang-format
         args: [--style=Google]
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: cpplint

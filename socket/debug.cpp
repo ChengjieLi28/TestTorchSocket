@@ -6,13 +6,12 @@
 
 #include "debug.h"
 
-#include "exception.h"
-//#include "logger.h"
-
 #include <algorithm>
 #include <cctype>
 #include <cstdlib>
 #include <string>
+
+#include "exception.h"
 
 namespace c10d {
 namespace detail {

@@ -7,9 +7,6 @@
 #include <string>
 #include <vector>
 
-//#include <c10/macros/Macros.h>
-//#include <torch/custom_class.h>
-
 namespace c10d {
 
 // callback function will be given arguments (optional<string> oldValue,

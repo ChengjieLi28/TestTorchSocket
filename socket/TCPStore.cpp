@@ -1010,7 +1010,7 @@ class SendBuffer {
 
   template <typename T>
   void appendValue(T value) {
-    uint8_t *begin = (uint8_t *)&value;
+    uint8_t *begin = reinterpret_cast<uint8_t *>(&value);
     buffer.insert(buffer.end(), begin, begin + sizeof(T));
     maybeFlush();
   }

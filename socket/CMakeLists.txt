@@ -12,8 +12,6 @@ include_directories(../third_party/fmt/include)
 add_library(SocketLib
         debug.h
         debug.cpp
-        logger.h
-        logger.cpp
         error.h
         exception.h
         exception.cpp
