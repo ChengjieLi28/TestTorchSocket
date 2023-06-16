@@ -5,6 +5,7 @@ project(TestTorchSocket)
 
 # include(CTest)
 
+include_directories(${CMAKE_SOURCE_DIR})
 
 add_subdirectory(socket)
 add_subdirectory(third_party/fmt)

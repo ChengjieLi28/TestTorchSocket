@@ -6,11 +6,14 @@
 
 #include "socket.h"
 
-#include <cstring>
+#include <fmt/chrono.h>
+
 #include <system_error>
-#include <thread>
 #include <utility>
 #include <vector>
+
+#include "error.h"
+#include "exception.h"
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -26,22 +29,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #endif
-
-#include <fmt/chrono.h>
-
-#include "error.h"
-//#include <fmt/format.h>
-
-//#include <torch/csrc/distributed/c10d/error.h>
-//#include <torch/csrc/distributed/c10d/exception.h>
-//#include <torch/csrc/distributed/c10d/logging.h>
-//#include "error.h"
-#include "exception.h"
-//#include "logger.h"
-
-//#include <c10/util/CallOnce.h>
-
-//#include "exception.h"
 
 namespace c10d {
 namespace detail {
