@@ -13,19 +13,19 @@
 #include <fmt/format.h>
 
 namespace c10d {
-    namespace detail {
+namespace detail {
 
-        enum class LogLevel { Trace, Debug, Info, Warning, Error };
+enum class LogLevel { Trace, Debug, Info, Warning, Error };
 
-        bool isLogLevelEnabled(LogLevel level) noexcept;
+bool isLogLevelEnabled(LogLevel level) noexcept;
 
-        template <typename... T>
-        std::string formatLogMessage(fmt::string_view fmt, T&&... args) {
-            return fmt::vformat(fmt, fmt::make_format_args(args...));
-        }
+template <typename... T>
+std::string formatLogMessage(fmt::string_view fmt, T &&...args) {
+  return fmt::vformat(fmt, fmt::make_format_args(args...));
+}
 
-    } // namespace detail
-} // namespace c10d
+}  // namespace detail
+}  // namespace c10d
 
 //#define C10D_ERROR(...)                                                      \
 //  LOG_IF(                                                                    \
@@ -38,14 +38,17 @@ namespace c10d {
 //      c10d::detail::isLogLevelEnabled(c10d::detail::LogLevel::Warning)) \
 //      << "[c10d] " << c10d::detail::formatLogMessage(__VA_ARGS__)
 //
-//#define C10D_INFO(...)                                                        \
-//  LOG_IF(INFO, c10d::detail::isLogLevelEnabled(c10d::detail::LogLevel::Info)) \
+//#define C10D_INFO(...) \
+//  LOG_IF(INFO, c10d::detail::isLogLevelEnabled(c10d::detail::LogLevel::Info))
+//  \
 //      << "[c10d] " << c10d::detail::formatLogMessage(__VA_ARGS__)
 //
-//#define C10D_DEBUG(...)                                                        \
-//  LOG_IF(INFO, c10d::detail::isLogLevelEnabled(c10d::detail::LogLevel::Debug)) \
+//#define C10D_DEBUG(...) \
+//  LOG_IF(INFO, c10d::detail::isLogLevelEnabled(c10d::detail::LogLevel::Debug))
+//  \
 //      << "[c10d - debug] " << c10d::detail::formatLogMessage(__VA_ARGS__)
 //
-//#define C10D_TRACE(...)                                                        \
-//  LOG_IF(INFO, c10d::detail::isLogLevelEnabled(c10d::detail::LogLevel::Trace)) \
+//#define C10D_TRACE(...) \
+//  LOG_IF(INFO, c10d::detail::isLogLevelEnabled(c10d::detail::LogLevel::Trace))
+//  \
 //      << "[c10d - trace] " << c10d::detail::formatLogMessage(__VA_ARGS__)

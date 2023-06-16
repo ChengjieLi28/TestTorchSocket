@@ -5,6 +5,7 @@
 // LICENSE file in the root directory of this source tree.
 
 #include "debug.h"
+
 #include "exception.h"
 //#include "logger.h"
 
@@ -14,61 +15,54 @@
 #include <string>
 
 namespace c10d {
-    namespace detail {
-        namespace {
+namespace detail {
+namespace {
 
-            DebugLevel loadDebugLevelFromEnvironment() {
-                char* env_value = std::getenv("TORCH_DISTRIBUTED_DEBUG");
+DebugLevel loadDebugLevelFromEnvironment() {
+  char *env_value = std::getenv("TORCH_DISTRIBUTED_DEBUG");
 
-                if (env_value == nullptr) {
-                    return DebugLevel::Off;
-                }
+  if (env_value == nullptr) {
+    return DebugLevel::Off;
+  }
 
-                DebugLevel level{};
+  DebugLevel level{};
 
-                std::string level_str{env_value};
+  std::string level_str{env_value};
 
-                std::transform(
-                        level_str.begin(),
-                        level_str.end(),
-                        level_str.begin(),
-                        [](unsigned char c) { return toupper(c); });
+  std::transform(level_str.begin(), level_str.end(), level_str.begin(),
+                 [](unsigned char c) { return toupper(c); });
 
-                if (level_str == "OFF") {
-                    level = DebugLevel::Off;
-                } else if (level_str == "INFO") {
-                    level = DebugLevel::Info;
-                } else if (level_str == "DETAIL") {
-                    level = DebugLevel::Detail;
-                } else {
-                    throw C10dError{
-                            "The value of TORCH_DISTRIBUTED_DEBUG must be OFF, INFO, or DETAIL."};
-                }
+  if (level_str == "OFF") {
+    level = DebugLevel::Off;
+  } else if (level_str == "INFO") {
+    level = DebugLevel::Info;
+  } else if (level_str == "DETAIL") {
+    level = DebugLevel::Detail;
+  } else {
+    throw C10dError{
+        "The value of TORCH_DISTRIBUTED_DEBUG must be OFF, INFO, or DETAIL."};
+  }
 
-//                C10D_INFO("The debug level is set to {}.", level_str);
+  //                C10D_INFO("The debug level is set to {}.", level_str);
 
-                return level;
-            }
+  return level;
+}
 
-        } // namespace
-    } // namespace detail
+}  // namespace
+}  // namespace detail
 
-    namespace {
+namespace {
 
-        DebugLevel g_debug_level = DebugLevel::Off;
+DebugLevel g_debug_level = DebugLevel::Off;
 
-    } // namespace
+}  // namespace
 
-    void setDebugLevel(DebugLevel level) {
-        g_debug_level = level;
-    }
+void setDebugLevel(DebugLevel level) { g_debug_level = level; }
 
-    void setDebugLevelFromEnvironment() {
-        g_debug_level = detail::loadDebugLevelFromEnvironment();
-    }
+void setDebugLevelFromEnvironment() {
+  g_debug_level = detail::loadDebugLevelFromEnvironment();
+}
 
-    DebugLevel debug_level() noexcept {
-        return g_debug_level;
-    }
+DebugLevel debug_level() noexcept { return g_debug_level; }
 
-} // namespace c10d
+}  // namespace c10d

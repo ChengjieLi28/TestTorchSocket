@@ -16,13 +16,13 @@ class C10dError : public std::runtime_error {
  public:
   using std::runtime_error::runtime_error;
 
-  C10dError(const C10dError&) = default;
+  C10dError(const C10dError &) = default;
 
-  C10dError& operator=(const C10dError&) = default;
+  C10dError &operator=(const C10dError &) = default;
 
-  C10dError(C10dError&&) = default;
+  C10dError(C10dError &&) = default;
 
-  C10dError& operator=(C10dError&&) = default;
+  C10dError &operator=(C10dError &&) = default;
 
   ~C10dError() override;
 };
@@ -31,15 +31,15 @@ class TimeoutError : public C10dError {
  public:
   using C10dError::C10dError;
 
-  TimeoutError(const TimeoutError&) = default;
+  TimeoutError(const TimeoutError &) = default;
 
-  TimeoutError& operator=(const TimeoutError&) = default;
+  TimeoutError &operator=(const TimeoutError &) = default;
 
-  TimeoutError(TimeoutError&&) = default;
+  TimeoutError(TimeoutError &&) = default;
 
-  TimeoutError& operator=(TimeoutError&&) = default;
+  TimeoutError &operator=(TimeoutError &&) = default;
 
   ~TimeoutError() override;
 };
 
-} // namespace c10d
+}  // namespace c10d

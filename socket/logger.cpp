@@ -9,32 +9,31 @@
 #include "debug.h"
 
 namespace c10d {
-    namespace detail {
+namespace detail {
 
-        bool isLogLevelEnabled(LogLevel level) noexcept {
-            // c10 logger does not support debug and trace levels. In order to map higher
-            // levels we adjust our ordinal value.
-            int level_int = static_cast<int>(level) - 2;
+bool isLogLevelEnabled(LogLevel level) noexcept {
+  // c10 logger does not support debug and trace levels. In order to map higher
+  // levels we adjust our ordinal value.
+  int level_int = static_cast<int>(level) - 2;
 
-            if (level_int >= 0) {
-                return true;
-            }
+  if (level_int >= 0) {
+    return true;
+  }
 
-//            // Debug and trace levels are only enabled when c10 log level is set to INFO.
-//            if (FLAGS_caffe2_log_level != 0) {
-//                return false;
-//            }
+  //            // Debug and trace levels are only enabled when c10 log level is
+  //            set to INFO. if (FLAGS_caffe2_log_level != 0) {
+  //                return false;
+  //            }
 
-            if (level_int == -1) {
-                return debug_level() != DebugLevel::Off;
-            }
-            if (level_int == -2) {
-                return debug_level() == DebugLevel::Detail;
-            }
+  if (level_int == -1) {
+    return debug_level() != DebugLevel::Off;
+  }
+  if (level_int == -2) {
+    return debug_level() == DebugLevel::Detail;
+  }
 
-            return false;
-        }
+  return false;
+}
 
-    } // namespace detail
-} // namespace c10d
-
+}  // namespace detail
+}  // namespace c10d

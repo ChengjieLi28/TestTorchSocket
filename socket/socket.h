@@ -20,17 +20,15 @@ namespace detail {
 
 class SocketOptions {
  public:
-  SocketOptions& prefer_ipv6(bool value) noexcept {
+  SocketOptions &prefer_ipv6(bool value) noexcept {
     prefer_ipv6_ = value;
 
     return *this;
   }
 
-  bool prefer_ipv6() const noexcept {
-    return prefer_ipv6_;
-  }
+  bool prefer_ipv6() const noexcept { return prefer_ipv6_; }
 
-  SocketOptions& connect_timeout(std::chrono::seconds value) noexcept {
+  SocketOptions &connect_timeout(std::chrono::seconds value) noexcept {
     connect_timeout_ = value;
 
     return *this;
@@ -53,22 +51,20 @@ class Socket {
   // before any other socket function.
   static void initialize();
 
-  static Socket listen(std::uint16_t port, const SocketOptions& opts = {});
+  static Socket listen(std::uint16_t port, const SocketOptions &opts = {});
 
-  static Socket connect(
-      const std::string& host,
-      std::uint16_t port,
-      const SocketOptions& opts = {});
+  static Socket connect(const std::string &host, std::uint16_t port,
+                        const SocketOptions &opts = {});
 
   Socket() noexcept = default;
 
-  Socket(const Socket& other) = delete;
+  Socket(const Socket &other) = delete;
 
-  Socket& operator=(const Socket& other) = delete;
+  Socket &operator=(const Socket &other) = delete;
 
-  Socket(Socket&& other) noexcept;
+  Socket(Socket &&other) noexcept;
 
-  Socket& operator=(Socket&& other) noexcept;
+  Socket &operator=(Socket &&other) noexcept;
 
   ~Socket();
 
@@ -79,26 +75,26 @@ class Socket {
   std::uint16_t port() const;
 
  private:
-  explicit Socket(std::unique_ptr<SocketImpl>&& impl) noexcept;
+  explicit Socket(std::unique_ptr<SocketImpl> &&impl) noexcept;
 
   std::unique_ptr<SocketImpl> impl_;
 };
 
-} // namespace detail
+}  // namespace detail
 
 class SocketError : public C10dError {
  public:
   using C10dError::C10dError;
 
-  SocketError(const SocketError&) = default;
+  SocketError(const SocketError &) = default;
 
-  SocketError& operator=(const SocketError&) = default;
+  SocketError &operator=(const SocketError &) = default;
 
-  SocketError(SocketError&&) = default;
+  SocketError(SocketError &&) = default;
 
-  SocketError& operator=(SocketError&&) = default;
+  SocketError &operator=(SocketError &&) = default;
 
   ~SocketError() override;
 };
 
-} // namespace c10d
+}  // namespace c10d

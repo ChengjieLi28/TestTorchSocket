@@ -6,14 +6,14 @@
 
 namespace c10d {
 
-    enum class DebugLevel { Off = 0, Info = 1, Detail = 2 };
+enum class DebugLevel { Off = 0, Info = 1, Detail = 2 };
 
-    void setDebugLevel(DebugLevel level);
+void setDebugLevel(DebugLevel level);
 
 // Sets the debug level based on the value of the `TORCH_DISTRIBUTED_DEBUG`
 // environment variable.
-    void setDebugLevelFromEnvironment();
+void setDebugLevelFromEnvironment();
 
-    DebugLevel debug_level() noexcept;
+DebugLevel debug_level() noexcept;
 
-} // namespace c10d
+}  // namespace c10d

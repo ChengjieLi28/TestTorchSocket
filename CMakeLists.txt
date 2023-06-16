@@ -6,6 +6,5 @@ project(TestTorchSocket)
 # include(CTest)
 
 
-add_subdirectory(main)
 add_subdirectory(socket)
 add_subdirectory(third_party/fmt)
