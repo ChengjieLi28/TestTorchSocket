@@ -20,8 +20,10 @@ add_library(SocketLib
         TCPStore.hpp
         TCPStore.cpp UnixSockUtils.hpp Utils.hpp)
 
-add_executable(SocketExample socket_example.cpp)
+add_executable(SocketServer socket_server.cpp)
+add_executable(SocketWorker socket_worker.cpp)
 
 # Make sure you link your targets with this command. It can also link libraries and
 # even flags, so linking a target that does not exist will not give a configure-time error.
-target_link_libraries(SocketExample PRIVATE SocketLib fmt::fmt)
+target_link_libraries(SocketServer PRIVATE SocketLib fmt::fmt)
+target_link_libraries(SocketWorker PRIVATE SocketLib fmt::fmt)

@@ -1,4 +1,6 @@
+#include <chrono>
 #include <iostream>
+#include <thread>
 
 #include "TCPStore.hpp"
 
@@ -10,6 +12,9 @@ int main() {
   std::cout << store.getHost() + ", " << store.getPort() << std::endl;
 
   std::cout << "After waiting for workers." << std::endl;
+  std::cout << "This is server." << std::endl;
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(20000));
 
   return 0;
 }
