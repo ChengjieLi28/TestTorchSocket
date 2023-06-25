@@ -8,26 +8,26 @@
 
 #include <stdexcept>
 
-namespace c10d {
+namespace xoscar {
 
-class C10dError : public std::runtime_error {
+class xoscarError : public std::runtime_error {
  public:
   using std::runtime_error::runtime_error;
 
-  C10dError(const C10dError &) = default;
+  xoscarError(const xoscarError &) = default;
 
-  C10dError &operator=(const C10dError &) = default;
+  xoscarError &operator=(const xoscarError &) = default;
 
-  C10dError(C10dError &&) = default;
+  xoscarError(xoscarError &&) = default;
 
-  C10dError &operator=(C10dError &&) = default;
+  xoscarError &operator=(xoscarError &&) = default;
 
-  ~C10dError() override;
+  ~xoscarError() override;
 };
 
-class TimeoutError : public C10dError {
+class TimeoutError : public xoscarError {
  public:
-  using C10dError::C10dError;
+  using xoscarError::xoscarError;
 
   TimeoutError(const TimeoutError &) = default;
 
@@ -40,4 +40,4 @@ class TimeoutError : public C10dError {
   ~TimeoutError() override;
 };
 
-}  // namespace c10d
+}  // namespace xoscar

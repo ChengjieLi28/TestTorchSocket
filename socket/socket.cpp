@@ -30,7 +30,7 @@
 #include <unistd.h>
 #endif
 
-namespace c10d {
+namespace xoscar {
 namespace detail {
 namespace {
 #ifdef _WIN32
@@ -158,7 +158,7 @@ class SocketImpl {
   Handle hnd_;
 };
 }  // namespace detail
-}  // namespace c10d
+}  // namespace xoscar
 
 //
 // libfmt formatters for `addrinfo` and `Socket`
@@ -190,13 +190,13 @@ struct formatter<::addrinfo> {
 };
 
 template <>
-struct formatter<c10d::detail::SocketImpl> {
+struct formatter<xoscar::detail::SocketImpl> {
   constexpr decltype(auto) parse(format_parse_context &ctx) const {
     return ctx.begin();
   }
 
   template <typename FormatContext>
-  decltype(auto) format(const c10d::detail::SocketImpl &socket,
+  decltype(auto) format(const xoscar::detail::SocketImpl &socket,
                         FormatContext &ctx) const {
     ::sockaddr_storage addr_s{};
 
@@ -218,7 +218,7 @@ struct formatter<c10d::detail::SocketImpl> {
 
 }  // namespace fmt
 
-namespace c10d {
+namespace xoscar {
 namespace detail {
 
 SocketImpl::~SocketImpl() {
@@ -253,7 +253,7 @@ std::unique_ptr<SocketImpl> SocketImpl::accept() const {
           *this, err);
     }
 
-    //    C10D_ERROR(msg);
+    //    xoscar_ERROR(msg);
 
     throw SocketError{msg};
   }
@@ -262,7 +262,7 @@ std::unique_ptr<SocketImpl> SocketImpl::accept() const {
   addr.ai_addr = addr_ptr;
   addr.ai_addrlen = addr_len;
 
-  //  C10D_DEBUG(
+  //  xoscar_DEBUG(
   //      "The server socket on {} has accepted a connection from {}.",
   //      *this,
   //      addr);
@@ -273,7 +273,7 @@ std::unique_ptr<SocketImpl> SocketImpl::accept() const {
   impl->closeOnExec();
 
   if (!impl->enableNoDelay()) {
-    //    C10D_WARNING(
+    //    xoscar_WARNING(
     //        "The no-delay option cannot be enabled for the client socket on
     //        {}.", addr);
   }
@@ -391,7 +391,7 @@ class SocketListenOp {
   void recordError(fmt::string_view format, Args &&...args) {
     auto msg = fmt::vformat(format, fmt::make_format_args(args...));
 
-    //    C10D_WARNING(msg);
+    //    xoscar_WARNING(msg);
 
     errors_.emplace_back(std::move(msg));
   }
@@ -407,19 +407,19 @@ SocketListenOp::SocketListenOp(std::uint16_t port, const SocketOptions &opts)
 
 std::unique_ptr<SocketImpl> SocketListenOp::run() {
   if (opts_->prefer_ipv6()) {
-    //    C10D_DEBUG("The server socket will attempt to listen on an IPv6
+    //    xoscar_DEBUG("The server socket will attempt to listen on an IPv6
     //    address.");
     if (tryListen(AF_INET6)) {
       return std::move(socket_);
     }
 
-    //    C10D_DEBUG("The server socket will attempt to listen on an IPv4
+    //    xoscar_DEBUG("The server socket will attempt to listen on an IPv4
     //    address.");
     if (tryListen(AF_INET)) {
       return std::move(socket_);
     }
   } else {
-    //    C10D_DEBUG(
+    //    xoscar_DEBUG(
     //        "The server socket will attempt to listen on an IPv4 or IPv6
     //        address.");
     if (tryListen(AF_UNSPEC)) {
@@ -430,7 +430,7 @@ std::unique_ptr<SocketImpl> SocketListenOp::run() {
   constexpr auto *msg =
       "The server socket has failed to listen on any local network address.";
 
-  //  C10D_ERROR(msg);
+  //  xoscar_ERROR(msg);
 
   throw SocketError{fmt::format("{} {}", msg, fmt::join(errors_, " "))};
 }
@@ -460,7 +460,8 @@ bool SocketListenOp::tryListen(int family) {
   addrinfo_ptr result{naked_result};
 
   for (::addrinfo *addr = naked_result; addr != nullptr; addr = addr->ai_next) {
-    //    C10D_DEBUG("The server socket is attempting to listen on {}.", *addr);
+    //    xoscar_DEBUG("The server socket is attempting to listen on {}.",
+    //    *addr);
     if (tryListen(*addr)) {
       return true;
     }
@@ -483,7 +484,7 @@ bool SocketListenOp::tryListen(const ::addrinfo &addr) {
 
 #ifndef _WIN32
   if (!socket_->enableAddressReuse()) {
-    //    C10D_WARNING(
+    //    xoscar_WARNING(
     //        "The address reuse option cannot be enabled for the server socket
     //        on {}.", addr);
   }
@@ -497,7 +498,7 @@ bool SocketListenOp::tryListen(const ::addrinfo &addr) {
   // Here we follow the recommendation of Microsoft and use the non-standard
   // SO_EXCLUSIVEADDRUSE flag instead.
   if (!socket_->enableExclusiveAddressUse()) {
-    C10D_WARNING(
+    xoscar_WARNING(
         "The exclusive address use option cannot be enabled for the "
         "server socket on {}.",
         addr);
@@ -508,7 +509,7 @@ bool SocketListenOp::tryListen(const ::addrinfo &addr) {
   // wish to use our IPv6 socket for IPv4 communication as well, we explicitly
   // ask the system to enable it.
   if (addr.ai_family == AF_INET6 && !socket_->enableDualStack()) {
-    //    C10D_WARNING(
+    //    xoscar_WARNING(
     //        "The server socket does not support IPv4 communication on {}.",
     //        addr);
   }
@@ -530,7 +531,7 @@ bool SocketListenOp::tryListen(const ::addrinfo &addr) {
 
   socket_->closeOnExec();
 
-  //  C10D_INFO("The server socket has started to listen on {}.", addr);
+  //  xoscar_INFO("The server socket has started to listen on {}.", addr);
 
   return true;
 }
@@ -563,7 +564,7 @@ class SocketConnectOp {
   void recordError(fmt::string_view format, Args &&...args) {
     auto msg = fmt::vformat(format, fmt::make_format_args(args...));
 
-    //    C10D_WARNING(msg);
+    //    xoscar_WARNING(msg);
 
     errors_.emplace_back(std::move(msg));
   }
@@ -584,7 +585,7 @@ SocketConnectOp::SocketConnectOp(const std::string &host, std::uint16_t port,
 
 std::unique_ptr<SocketImpl> SocketConnectOp::run() {
   if (opts_->prefer_ipv6()) {
-    //    C10D_DEBUG(
+    //    xoscar_DEBUG(
     //        "The client socket will attempt to connect to an IPv6 address of
     //        ({}, {}).", host_, port_);
 
@@ -592,7 +593,7 @@ std::unique_ptr<SocketImpl> SocketConnectOp::run() {
       return std::move(socket_);
     }
 
-    //    C10D_DEBUG(
+    //    xoscar_DEBUG(
     //        "The client socket will attempt to connect to an IPv4 address of
     //        ({}, {}).", host_, port_);
 
@@ -600,7 +601,7 @@ std::unique_ptr<SocketImpl> SocketConnectOp::run() {
       return std::move(socket_);
     }
   } else {
-    //    C10D_DEBUG(
+    //    xoscar_DEBUG(
     //        "The client socket will attempt to connect to an IPv4 or IPv6
     //        address of ({}, {}).", host_, port_);
 
@@ -614,7 +615,7 @@ std::unique_ptr<SocketImpl> SocketConnectOp::run() {
       "network address of ({}, {}).",
       host_, port_);
 
-  //  C10D_ERROR(msg);
+  //  xoscar_ERROR(msg);
 
   throw SocketError{fmt::format("{} {}", msg, fmt::join(errors_, " "))};
 }
@@ -654,7 +655,7 @@ bool SocketConnectOp::tryConnect(int family) {
 
       for (::addrinfo *addr = naked_result; addr != nullptr;
            addr = addr->ai_next) {
-        //        C10D_TRACE("The client socket is attempting to connect to
+        //        xoscar_TRACE("The client socket is attempting to connect to
         //        {}.", *addr);
 
         ConnectResult cr = tryConnect(*addr);
@@ -672,7 +673,7 @@ bool SocketConnectOp::tryConnect(int family) {
       if (Clock::now() < deadline_ - delay_duration_) {
         // Prevent our log output to be too noisy, warn only every 30 seconds.
         if (retry_attempt == 30) {
-          //          C10D_INFO(
+          //          xoscar_INFO(
           //              "No socket on ({}, {}) is listening yet, will retry.",
           //              host_,
           //              port_);
@@ -722,7 +723,7 @@ SocketConnectOp::ConnectResult SocketConnectOp::tryConnect(
     // Retry if the server is not yet listening or if its backlog is exhausted.
     if (err == std::errc::connection_refused ||
         err == std::errc::connection_reset) {
-      //      C10D_TRACE(
+      //      xoscar_TRACE(
       //          "The server socket on {} is not yet listening {}, will
       //          retry.", addr, err);
 
@@ -740,10 +741,11 @@ SocketConnectOp::ConnectResult SocketConnectOp::tryConnect(
   // TODO: Remove once we fully migrate to non-blocking mode.
   socket_->disableNonBlocking();
 
-  //  C10D_INFO("The client socket has connected to {} on {}.", addr, *socket_);
+  //  xoscar_INFO("The client socket has connected to {} on {}.", addr,
+  //  *socket_);
 
   if (!socket_->enableNoDelay()) {
-    //    C10D_WARNING(
+    //    xoscar_WARNING(
     //        "The no-delay option cannot be enabled for the client socket on
     //        {}.", *socket_);
   }
@@ -812,7 +814,7 @@ void SocketConnectOp::throwTimeoutError() const {
       "trying to connect to ({}, {}).",
       opts_->connect_timeout(), host_, port_);
 
-  //  C10D_ERROR(msg);
+  //  xoscar_ERROR(msg);
 
   throw TimeoutError{msg};
 }
@@ -882,4 +884,4 @@ Socket::Socket(std::unique_ptr<SocketImpl> &&impl) noexcept
 
 SocketError::~SocketError() = default;
 
-}  // namespace c10d
+}  // namespace xoscar

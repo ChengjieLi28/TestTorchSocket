@@ -45,7 +45,7 @@ struct formatter<std::error_code> {
 
 }  // namespace fmt
 
-namespace c10d {
+namespace xoscar {
 namespace detail {
 
 inline std::error_code lastError() noexcept {
@@ -53,4 +53,4 @@ inline std::error_code lastError() noexcept {
 }
 
 }  // namespace detail
-}  // namespace c10d
+}  // namespace xoscar

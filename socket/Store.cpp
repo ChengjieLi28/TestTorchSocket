@@ -1,6 +1,6 @@
 #include "Store.hpp"
 
-namespace c10d {
+namespace xoscar {
 
 constexpr std::chrono::milliseconds Store::kDefaultTimeout;
 constexpr std::chrono::milliseconds Store::kNoTimeout;
@@ -67,4 +67,4 @@ void Store::multiSet(const std::vector<std::string> &keys,
 
 bool Store::hasExtendedApi() const { return false; }
 
-}  // namespace c10d
+}  // namespace xoscar

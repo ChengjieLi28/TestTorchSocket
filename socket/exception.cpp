@@ -1,9 +1,9 @@
 #include "exception.h"
 
-namespace c10d {
+namespace xoscar {
 
-C10dError::~C10dError() = default;
+xoscarError::~xoscarError() = default;
 
 TimeoutError::~TimeoutError() = default;
 
-}  // namespace c10d
+}  // namespace xoscar

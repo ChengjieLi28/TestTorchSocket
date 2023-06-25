@@ -6,7 +6,7 @@
 
 #include "Utils.hpp"
 
-namespace c10d::tcputil {
+namespace xoscar::tcputil {
 
 #define CONNECT_SOCKET_OFFSET 2
 
@@ -24,4 +24,4 @@ inline struct ::pollfd getPollfd(int socket, short events) {
   return res;
 }
 
-}  // namespace c10d::tcputil
+}  // namespace xoscar::tcputil

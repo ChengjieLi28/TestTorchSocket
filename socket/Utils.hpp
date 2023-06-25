@@ -22,7 +22,7 @@
 #include <tuple>
 #include <vector>
 
-namespace c10d {
+namespace xoscar {
 
 using RankType = uint32_t;
 using SizeType = uint64_t;
@@ -190,4 +190,4 @@ inline std::string recvString(int socket) {
   return std::string(value.data(), value.size());
 }
 }  // namespace tcputil
-}  // namespace c10d
+}  // namespace xoscar

@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace c10d {
+namespace xoscar {
 
 // callback function will be given arguments (optional<string> oldValue,
 // optional<string> newValue)
@@ -100,4 +100,4 @@ class Store {
   std::chrono::milliseconds timeout_;
 };
 
-}  // namespace c10d
+}  // namespace xoscar

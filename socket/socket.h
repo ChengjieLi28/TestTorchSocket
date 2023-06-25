@@ -13,7 +13,7 @@
 
 #include "exception.h"
 
-namespace c10d {
+namespace xoscar {
 namespace detail {
 
 class SocketOptions {
@@ -80,9 +80,9 @@ class Socket {
 
 }  // namespace detail
 
-class SocketError : public C10dError {
+class SocketError : public xoscarError {
  public:
-  using C10dError::C10dError;
+  using xoscarError::xoscarError;
 
   SocketError(const SocketError &) = default;
 
@@ -95,4 +95,4 @@ class SocketError : public C10dError {
   ~SocketError() override;
 };
 
-}  // namespace c10d
+}  // namespace xoscar

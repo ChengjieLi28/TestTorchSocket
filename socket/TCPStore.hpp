@@ -7,7 +7,7 @@
 
 #include "Store.hpp"
 
-namespace c10d {
+namespace xoscar {
 namespace detail {
 
 class TCPServer;
@@ -115,4 +115,4 @@ class TCPStore : public Store {
   std::mutex activeOpLock_;
 };
 
-}  // namespace c10d
+}  // namespace xoscar

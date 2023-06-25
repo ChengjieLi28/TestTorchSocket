@@ -19,14 +19,14 @@
 #endif
 
 #ifdef _WIN32
-#include <torch/csrc/distributed/c10d/WinSockUtils.hpp>
+#include <torch/csrc/distributed/xoscar/WinSockUtils.hpp>
 #else
 #include "UnixSockUtils.hpp"
 #endif
 
 #include "socket.h"
 
-namespace c10d {
+namespace xoscar {
 namespace detail {
 namespace {
 
@@ -1277,4 +1277,4 @@ void TCPStore::multiSet(const std::vector<std::string> &keys,
 
 bool TCPStore::hasExtendedApi() const { return true; }
 
-}  // namespace c10d
+}  // namespace xoscar
