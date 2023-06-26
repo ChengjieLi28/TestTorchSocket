@@ -4,6 +4,8 @@
 
 #include <algorithm>
 #include <array>
+#include <cassert>
+#include <condition_variable>
 #include <iostream>
 #include <system_error>
 #include <thread>

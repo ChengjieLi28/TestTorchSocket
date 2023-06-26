@@ -1,7 +1,9 @@
 #pragma once
 
+#include <chrono>
 #include <cstdint>
 #include <ctime>
+#include <functional>
 #include <optional>
 #include <stdexcept>
 #include <string>
