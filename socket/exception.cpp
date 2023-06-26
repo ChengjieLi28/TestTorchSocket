@@ -2,7 +2,7 @@
 
 namespace xoscar {
 
-xoscarError::~xoscarError() = default;
+XoscarError::~XoscarError() = default;
 
 TimeoutError::~TimeoutError() = default;
 

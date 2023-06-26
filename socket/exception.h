@@ -10,34 +10,34 @@
 
 namespace xoscar {
 
-class xoscarError : public std::runtime_error {
- public:
-  using std::runtime_error::runtime_error;
+class XoscarError : public std::runtime_error {
+public:
+    using std::runtime_error::runtime_error;
 
-  xoscarError(const xoscarError &) = default;
+    XoscarError(const XoscarError &) = default;
 
-  xoscarError &operator=(const xoscarError &) = default;
+    XoscarError &operator=(const XoscarError &) = default;
 
-  xoscarError(xoscarError &&) = default;
+    XoscarError(XoscarError &&) = default;
 
-  xoscarError &operator=(xoscarError &&) = default;
+    XoscarError &operator=(XoscarError &&) = default;
 
-  ~xoscarError() override;
+    ~XoscarError() override;
 };
 
-class TimeoutError : public xoscarError {
- public:
-  using xoscarError::xoscarError;
+class TimeoutError : public XoscarError {
+public:
+    using XoscarError::XoscarError;
 
-  TimeoutError(const TimeoutError &) = default;
+    TimeoutError(const TimeoutError &) = default;
 
-  TimeoutError &operator=(const TimeoutError &) = default;
+    TimeoutError &operator=(const TimeoutError &) = default;
 
-  TimeoutError(TimeoutError &&) = default;
+    TimeoutError(TimeoutError &&) = default;
 
-  TimeoutError &operator=(TimeoutError &&) = default;
+    TimeoutError &operator=(TimeoutError &&) = default;
 
-  ~TimeoutError() override;
+    ~TimeoutError() override;
 };
 
 }  // namespace xoscar

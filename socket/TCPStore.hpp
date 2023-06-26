@@ -1,11 +1,11 @@
 #pragma once
 
+#include "Store.hpp"
+
 #include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <mutex>
-
-#include "Store.hpp"
 
 namespace xoscar {
 namespace detail {
@@ -17,102 +17,107 @@ class TCPClient;
 class TCPCallbackClient;
 
 struct SocketAddress {
-  std::string host{};
-  std::uint16_t port{};
+    std::string host{};
+    std::uint16_t port{};
 };
 
 }  // namespace detail
 
 struct TCPStoreOptions {
-  static constexpr std::uint16_t kDefaultPort = 29500;
+    static constexpr std::uint16_t kDefaultPort = 29500;
 
-  std::uint16_t port = kDefaultPort;
-  bool isServer = false;
-  std::optional<std::size_t> numWorkers = std::nullopt;
-  bool waitWorkers = true;
-  std::chrono::milliseconds timeout = Store::kDefaultTimeout;
+    std::uint16_t port = kDefaultPort;
+    bool isServer = false;
+    std::optional<std::size_t> numWorkers = std::nullopt;
+    bool waitWorkers = true;
+    std::chrono::milliseconds timeout = Store::kDefaultTimeout;
 
-  // A boolean value indicating whether multiple store instances can be
-  // initialized with the same host:port pair.
-  bool multiTenant = false;
+    // A boolean value indicating whether multiple store instances can be
+    // initialized with the same host:port pair.
+    bool multiTenant = false;
 };
 
 class TCPStore : public Store {
- public:
-  explicit TCPStore(std::string host, const TCPStoreOptions &opts = {});
+public:
+    explicit TCPStore(std::string host, const TCPStoreOptions &opts = {});
 
-  [[deprecated("Use TCPStore(host, opts) instead.")]] explicit TCPStore(
-      const std::string &masterAddr, std::uint16_t masterPort,
-      std::optional<int> numWorkers = std::nullopt, bool isServer = false,
-      const std::chrono::milliseconds &timeout = kDefaultTimeout,
-      bool waitWorkers = true);
+    [[deprecated("Use TCPStore(host, opts) instead.")]] explicit TCPStore(
+        const std::string &masterAddr,
+        std::uint16_t masterPort,
+        std::optional<int> numWorkers = std::nullopt,
+        bool isServer = false,
+        const std::chrono::milliseconds &timeout = kDefaultTimeout,
+        bool waitWorkers = true);
 
-  ~TCPStore();
+    ~TCPStore();
 
-  void set(const std::string &key, const std::vector<uint8_t> &value) override;
+    void set(const std::string &key,
+             const std::vector<uint8_t> &value) override;
 
-  std::vector<uint8_t> compareSet(
-      const std::string &key, const std::vector<uint8_t> &expectedValue,
-      const std::vector<uint8_t> &desiredValue) override;
+    std::vector<uint8_t>
+    compareSet(const std::string &key,
+               const std::vector<uint8_t> &expectedValue,
+               const std::vector<uint8_t> &desiredValue) override;
 
-  std::vector<uint8_t> get(const std::string &key) override;
+    std::vector<uint8_t> get(const std::string &key) override;
 
-  int64_t add(const std::string &key, int64_t value) override;
+    int64_t add(const std::string &key, int64_t value) override;
 
-  bool deleteKey(const std::string &key) override;
+    bool deleteKey(const std::string &key) override;
 
-  // NOTE: calling other TCPStore APIs inside the callback is NOT threadsafe
-  // watchKey() is a blocking operation. It will register the socket on
-  // TCPStoreMasterDaemon and the callback on TCPStoreWorkerDaemon. It will
-  // return once it has verified the callback is registered on both background
-  // threads. Only one thread can call watchKey() at a time.
-  void watchKey(const std::string &key, WatchKeyCallback callback) override;
+    // NOTE: calling other TCPStore APIs inside the callback is NOT threadsafe
+    // watchKey() is a blocking operation. It will register the socket on
+    // TCPStoreMasterDaemon and the callback on TCPStoreWorkerDaemon. It will
+    // return once it has verified the callback is registered on both background
+    // threads. Only one thread can call watchKey() at a time.
+    void watchKey(const std::string &key, WatchKeyCallback callback) override;
 
-  bool check(const std::vector<std::string> &keys) override;
+    bool check(const std::vector<std::string> &keys) override;
 
-  int64_t getNumKeys() override;
+    int64_t getNumKeys() override;
 
-  void wait(const std::vector<std::string> &keys) override;
+    void wait(const std::vector<std::string> &keys) override;
 
-  void wait(const std::vector<std::string> &keys,
-            const std::chrono::milliseconds &timeout) override;
+    void wait(const std::vector<std::string> &keys,
+              const std::chrono::milliseconds &timeout) override;
 
-  void append(const std::string &key,
-              const std::vector<uint8_t> &value) override;
+    void append(const std::string &key,
+                const std::vector<uint8_t> &value) override;
 
-  std::vector<std::vector<uint8_t>> multiGet(
-      const std::vector<std::string> &keys) override;
+    std::vector<std::vector<uint8_t>>
+    multiGet(const std::vector<std::string> &keys) override;
 
-  void multiSet(const std::vector<std::string> &keys,
-                const std::vector<std::vector<uint8_t>> &values) override;
+    void multiSet(const std::vector<std::string> &keys,
+                  const std::vector<std::vector<uint8_t>> &values) override;
 
-  bool hasExtendedApi() const override;
+    bool hasExtendedApi() const override;
 
-  // Waits for all workers to join.
-  void waitForWorkers();
+    // Waits for all workers to join.
+    void waitForWorkers();
 
-  // Returns the hostname used by the TCPStore.
-  const std::string &getHost() const noexcept { return addr_.host; }
+    // Returns the hostname used by the TCPStore.
+    const std::string &getHost() const noexcept { return addr_.host; }
 
-  // Returns the port used by the TCPStore.
-  std::uint16_t getPort() const noexcept { return addr_.port; }
+    // Returns the port used by the TCPStore.
+    std::uint16_t getPort() const noexcept { return addr_.port; }
 
- private:
-  int64_t incrementValueBy(const std::string &key, int64_t delta);
+private:
+    int64_t incrementValueBy(const std::string &key, int64_t delta);
 
-  std::vector<uint8_t> doGet(const std::string &key);
+    std::vector<uint8_t> doGet(const std::string &key);
 
-  void doWait(std::vector<std::string> keys, std::chrono::milliseconds timeout);
+    void doWait(std::vector<std::string> keys,
+                std::chrono::milliseconds timeout);
 
-  detail::SocketAddress addr_;
-  std::shared_ptr<detail::TCPServer> server_;
-  std::unique_ptr<detail::TCPClient> client_;
-  std::unique_ptr<detail::TCPCallbackClient> callbackClient_;
-  std::optional<std::size_t> numWorkers_;
+    detail::SocketAddress addr_;
+    std::shared_ptr<detail::TCPServer> server_;
+    std::unique_ptr<detail::TCPClient> client_;
+    std::unique_ptr<detail::TCPCallbackClient> callbackClient_;
+    std::optional<std::size_t> numWorkers_;
 
-  const std::string initKey_ = "init/";
-  const std::string keyPrefix_ = "/";
-  std::mutex activeOpLock_;
+    const std::string initKey_ = "init/";
+    const std::string keyPrefix_ = "/";
+    std::mutex activeOpLock_;
 };
 
 }  // namespace xoscar

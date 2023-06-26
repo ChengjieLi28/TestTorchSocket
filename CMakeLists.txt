@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.11...3.21)
 
 project(TestTorchSocket)
-# set(MODERN_CMAKE_BUILD_TESTING ON)
 set(CMAKE_CXX_STANDARD 20)
-#set(PYTHON_EXECUTABLE "/home/lichengjie/miniconda3/envs/py38/bin/python")
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 include_directories(${CMAKE_SOURCE_DIR})
 

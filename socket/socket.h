@@ -6,94 +6,95 @@
 
 #pragma once
 
+#include "exception.h"
+
 #include <chrono>
 #include <cstdint>
 #include <ctime>
 #include <memory>
 #include <string>
 
-#include "exception.h"
-
 namespace xoscar {
 namespace detail {
 
 class SocketOptions {
- public:
-  SocketOptions &prefer_ipv6(bool value) noexcept {
-    prefer_ipv6_ = value;
+public:
+    SocketOptions &prefer_ipv6(bool value) noexcept {
+        prefer_ipv6_ = value;
 
-    return *this;
-  }
+        return *this;
+    }
 
-  bool prefer_ipv6() const noexcept { return prefer_ipv6_; }
+    bool prefer_ipv6() const noexcept { return prefer_ipv6_; }
 
-  SocketOptions &connect_timeout(std::chrono::seconds value) noexcept {
-    connect_timeout_ = value;
+    SocketOptions &connect_timeout(std::chrono::seconds value) noexcept {
+        connect_timeout_ = value;
 
-    return *this;
-  }
+        return *this;
+    }
 
-  std::chrono::seconds connect_timeout() const noexcept {
-    return connect_timeout_;
-  }
+    std::chrono::seconds connect_timeout() const noexcept {
+        return connect_timeout_;
+    }
 
- private:
-  bool prefer_ipv6_ = true;
-  std::chrono::seconds connect_timeout_{30};
+private:
+    bool prefer_ipv6_ = true;
+    std::chrono::seconds connect_timeout_{30};
 };
 
 class SocketImpl;
 
 class Socket {
- public:
-  // This function initializes the underlying socket library and must be called
-  // before any other socket function.
-  static void initialize();
+public:
+    // This function initializes the underlying socket library and must be
+    // called before any other socket function.
+    static void initialize();
 
-  static Socket listen(std::uint16_t port, const SocketOptions &opts = {});
+    static Socket listen(std::uint16_t port, const SocketOptions &opts = {});
 
-  static Socket connect(const std::string &host, std::uint16_t port,
-                        const SocketOptions &opts = {});
+    static Socket connect(const std::string &host,
+                          std::uint16_t port,
+                          const SocketOptions &opts = {});
 
-  Socket() noexcept = default;
+    Socket() noexcept = default;
 
-  Socket(const Socket &other) = delete;
+    Socket(const Socket &other) = delete;
 
-  Socket &operator=(const Socket &other) = delete;
+    Socket &operator=(const Socket &other) = delete;
 
-  Socket(Socket &&other) noexcept;
+    Socket(Socket &&other) noexcept;
 
-  Socket &operator=(Socket &&other) noexcept;
+    Socket &operator=(Socket &&other) noexcept;
 
-  ~Socket();
+    ~Socket();
 
-  Socket accept() const;
+    Socket accept() const;
 
-  int handle() const noexcept;
+    int handle() const noexcept;
 
-  std::uint16_t port() const;
+    std::uint16_t port() const;
 
- private:
-  explicit Socket(std::unique_ptr<SocketImpl> &&impl) noexcept;
+private:
+    explicit Socket(std::unique_ptr<SocketImpl> &&impl) noexcept;
 
-  std::unique_ptr<SocketImpl> impl_;
+    std::unique_ptr<SocketImpl> impl_;
 };
 
 }  // namespace detail
 
-class SocketError : public xoscarError {
- public:
-  using xoscarError::xoscarError;
+class SocketError : public XoscarError {
+public:
+    using XoscarError::XoscarError;
 
-  SocketError(const SocketError &) = default;
+    SocketError(const SocketError &) = default;
 
-  SocketError &operator=(const SocketError &) = default;
+    SocketError &operator=(const SocketError &) = default;
 
-  SocketError(SocketError &&) = default;
+    SocketError(SocketError &&) = default;
 
-  SocketError &operator=(SocketError &&) = default;
+    SocketError &operator=(SocketError &&) = default;
 
-  ~SocketError() override;
+    ~SocketError() override;
 };
 
 }  // namespace xoscar
